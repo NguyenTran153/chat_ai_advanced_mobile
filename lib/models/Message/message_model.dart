@@ -4,7 +4,7 @@ class Message {
 
   Message({required this.text, required this.isUser});
 
-  factory Message.fromJson(Map<String, dynamic> json) {
+  factory Message.fromJson(dynamic json) {
     return Message(
       text: json['text'],
       isUser: json['isUser'],
@@ -12,7 +12,7 @@ class Message {
   }
 
   Map<String, dynamic> toJson() => {
-        'text': text,
-        'isUser': isUser,
-      };
+    'text': text,
+    'isUser': isUser,
+  };
 }

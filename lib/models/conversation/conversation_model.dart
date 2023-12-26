@@ -6,10 +6,13 @@ class Conversation {
 
   Conversation({required this.id, required this.messages});
 
-  factory Conversation.fromJson(Map<String, dynamic> json) {
-    List<dynamic> messagesData = json['messages'];
-    List<Message> messages =
-        messagesData.map((data) => Message.fromJson(data)).toList();
+  factory Conversation.fromJson(dynamic json) {
+    List<Message> messages = [];
+
+    if (json['messages'] is List) {
+      List<dynamic> messagesData = json['messages'];
+      messages = messagesData.map((data) => Message.fromJson(data)).toList();
+    }
 
     return Conversation(
       id: json['id'],
@@ -18,7 +21,7 @@ class Conversation {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'messages': messages.map((message) => message.toJson()).toList(),
-      };
+    'id': id,
+    'messages': messages.map((message) => message.toJson()).toList(),
+  };
 }

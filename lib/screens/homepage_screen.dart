@@ -30,9 +30,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
     // Save conversations locally
     await _saveConversations();
 
-    // Update the UI in the Drawer
-    setState(() {});
-
     // Set the selected conversation to the newly created one
     setState(() {
       selectedConversation = newConversation;
@@ -50,17 +47,25 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Future<void> _loadConversations() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? conversationsJson = prefs.getString('conversations');
+
     if (conversationsJson != null && conversationsJson.isNotEmpty) {
-      List<dynamic> conversationsData = jsonDecode(conversationsJson);
-      conversations =
-          conversationsData.map((data) => Conversation.fromJson(data)).toList();
+      dynamic conversationsData = jsonDecode(conversationsJson);
+
+      if (conversationsData is List) {
+        conversations = conversationsData.map((data) => Conversation.fromJson(data)).toList();
+      } else if (conversationsData is Map) {
+        conversations = [Conversation.fromJson(conversationsData)];
+      }
     }
   }
+
 
   @override
   void initState() {
     super.initState();
-    _loadConversations();
+    _loadConversations().then((_) {
+      setState(() {});
+    });
   }
 
   @override
