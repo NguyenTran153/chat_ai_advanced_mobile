@@ -52,13 +52,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       dynamic conversationsData = jsonDecode(conversationsJson);
 
       if (conversationsData is List) {
-        conversations = conversationsData.map((data) => Conversation.fromJson(data)).toList();
+        conversations = conversationsData
+            .map((data) => Conversation.fromJson(data))
+            .toList();
       } else if (conversationsData is Map) {
         conversations = [Conversation.fromJson(conversationsData)];
       }
     }
   }
-
 
   @override
   void initState() {
@@ -127,7 +128,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ),
       ),
       body: selectedConversation != null
-          ? ConversationScreen(conversation: selectedConversation!)
+          ? ConversationScreen(
+              key: ValueKey(selectedConversation!
+                  .id), // Add a key to force recreation when conversation changes
+              conversation: selectedConversation!,
+            )
           : Container(
               alignment: Alignment.center,
               child: Text('No conversation selected.'),
