@@ -90,13 +90,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Trích xuất phản hồi từ AI từ phản hồi API
         var responseData = jsonDecode(response.body);
         String aiResponse = responseData['choices'][0]['message']['content'];
 
         _saveConversations();
 
-        // Thêm phản hồi từ AI vào danh sách tin nhắn
         setState(() {
           widget.conversation.messages.add(Message(text: aiResponse, isUser: false));
           messages = List.from(widget.conversation.messages);
@@ -104,9 +102,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
         _messageController.clear();
       } else {
+        String aiResponse = 'Error: ${response.statusCode}, ${response.body}';
+        _saveConversations();
+
+        setState(() {
+          widget.conversation.messages.add(Message(text: aiResponse, isUser: false));
+          messages = List.from(widget.conversation.messages);
+        });
+
+        _messageController.clear();
         print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
+      String aiResponse = 'Error calling API: $e';
+      _saveConversations();
+
+      setState(() {
+        widget.conversation.messages.add(Message(text: aiResponse, isUser: false));
+        messages = List.from(widget.conversation.messages);
+      });
+
+      _messageController.clear();
       print('Error calling API: $e');
     }
   }
